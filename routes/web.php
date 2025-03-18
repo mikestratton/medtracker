@@ -33,4 +33,18 @@ Route::resource('medication_administration', MedicationAdministrationController:
     ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
+Route::get('/test-function', function () {
+    // Assuming your function is in a class called YourController
+    $controller = new MedicationAdministrationController(); // Or use dependency injection
+
+    // If your function is a static method, you can call it directly:
+    // $result = YourController::yourFunction();
+
+    // Assuming your function is a method in the controller instance
+    $result = $controller->getTomorrowInUserTimezone(); // Replace with your function call
+
+    // Output the result (e.g., return a response, dump to the screen)
+    return $result; // Or dd($result); or view('test-view', ['result' => $result]);
+});
+
 require __DIR__.'/auth.php';
