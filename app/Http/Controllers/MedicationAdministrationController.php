@@ -108,14 +108,21 @@ class MedicationAdministrationController extends Controller
             $timesTakenDaily = $record->times_taken_daily;
             $medicationAdministrationId = $record->id;
 
-            $today = Carbon::today()->toDateTimeString();
-            $tomorrow = Carbon::tomorrow()->toDateTimeString();
+            $dateString = $this->getTodayInUserTimezone();
+
+// Parse the date string into a Carbon instance
+            $carbonDate = Carbon::parse($dateString);
+
+            $userToday = $this->getTodayInUserTimezone();
+            $userTomorrow = $this->getTomorrowInUserTimezone();
+//            $today = Carbon::today()->toDateTimeString();
+//            $tomorrow = Carbon::tomorrow()->toDateTimeString();
 
 //            dd($today, $tomorrow);
             // Check if rows already exist for today
             $existingCount = Event::where('medication_administration_id', $medicationAdministrationId)
-                ->where('created_at', '>=', $today)
-                ->where('created_at', '<', $tomorrow)
+                ->where('date', '>=', $userToday)
+                ->where('date', '<', $userTomorrow)
                 ->count();
 
 //            dd($existingCount);
@@ -142,6 +149,39 @@ class MedicationAdministrationController extends Controller
             }
         } else {
             return response()->json(['message' => 'Medication administration record not found'], 404);
+        }
+
+    }
+
+    public function getTodayInUserTimezone()
+    {
+        $user = Auth::user();
+
+        if ($user && $user->timezone) {
+            $userTimezone = $user->timezone;
+            $utcNow = Carbon::now('UTC');
+            $userNow = $utcNow->setTimezone($userTimezone);
+            $todayInUserTimezone = $userNow->toDateString();
+
+            return $todayInUserTimezone;
+        } else {
+            return Carbon::today()->toDateString();
+        }
+    }
+
+    public function getTomorrowInUserTimezone()
+    {
+        $user = Auth::user();
+
+        if ($user && $user->timezone) {
+            $userTimezone = $user->timezone;
+            $utcNow = Carbon::now('UTC');
+            $userNow = $utcNow->setTimezone($userTimezone);
+            $tomorrowInUserTimezone = $userNow->addDay()->toDateString();
+
+            return $tomorrowInUserTimezone;
+        } else {
+            return Carbon::tomorrow()->toDateString();
         }
     }
 }
