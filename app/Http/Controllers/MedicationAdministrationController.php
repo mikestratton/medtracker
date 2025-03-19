@@ -89,13 +89,16 @@ class MedicationAdministrationController extends Controller
             abort(403);
         }
 
-
         $validatedData = $request->validate([
             'times_taken_daily' => 'required|integer|max:11',
         ]);
-//
+//        $medicationAdministration->update($validatedData);
+
+        $originalTimesTakenDaily = $medicationAdministration->times_taken_daily;
+
         $medicationAdministration->update($validatedData);
-//        $medicationAdministration->update($request->all());
+
+        $this->updateMedicationTimes($medicationAdministration);
 
         return redirect()->route('events.index')->with('success', 'Medication administration updated successfully!');
     }
@@ -152,6 +155,56 @@ class MedicationAdministrationController extends Controller
 
     }
 
+    public function updateMedicationTimes(MedicationAdministration $medicationAdministration)
+    {
+        $user_id = Auth::id();
+        $timesTakenDaily = $medicationAdministration->times_taken_daily;
+        $medicationAdministrationId = $medicationAdministration->id;
+
+        $userToday = $this->timezoneService->getTodayInUserTimezone();
+        $userTomorrow = $this->timezoneService->getTomorrowInUserTimezone();
+
+        // Get existing rows for today
+        $existingEvents = Event::where('medication_administration_id', $medicationAdministrationId)
+            ->where('date', '>=', $userToday)
+            ->where('date', '<', $userTomorrow)
+            ->get();
+
+        $existingCount = $existingEvents->count();
+
+        if ($existingCount < $timesTakenDaily) {
+            // Create additional rows
+            $rowsToCreate = $timesTakenDaily - $existingCount;
+            $currentTime = Carbon::now();
+            $formattedTime = $currentTime->toTimeString();
+
+            for ($i = 0; $i < $rowsToCreate; $i++) {
+                Event::create([
+                    'user_id' => $user_id,
+                    'medication_administration_id' => $medicationAdministrationId,
+                    'date' => $userToday,
+                    'time' => $formattedTime,
+                ]);
+            }
+        } elseif ($existingCount > $timesTakenDaily) {
+            // Delete excess rows
+            $rowsToDelete = $existingCount - $timesTakenDaily;
+
+            // Delete the oldest rows first
+            $eventsToDelete = $existingEvents->sortBy('created_at')->take($rowsToDelete);
+
+            foreach ($eventsToDelete as $event) {
+                $event->delete();
+            }
+        } else {
+            //Number of rows is the same, just update dates.
+            foreach($existingEvents as $event){
+                $event->date = $userToday;
+                $event->save();
+            }
+        }
+
+    }
 
 
 
