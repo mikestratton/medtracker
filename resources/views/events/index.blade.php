@@ -1,4 +1,4 @@
-<x-layouts.app title="Dashboard">
+<x-layouts.app title="Medication Events">
     <form action="{{ route('medication_administration.update', $meds->id) }}" method="POST">
         @csrf
         @method('PATCH')
@@ -37,14 +37,14 @@
 
             @php $i = 1; @endphp
                     @foreach($events as $event)
-                        <form class="space-y-6 p-4 rounded shadow-md bg-white" action="{{ route('events.update', $event->id) }}" method="POST">
+                        <form class="space-y-6 p-4 rounded shadow-md <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?> action="{{ route('events.update', $event->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
 
                             <h2>Dose #@php echo $i; @endphp</h2>
                             <div class="form-group">
                                 <label for="has_taken_medication">Has Taken Medication:</label>
-                                <select name="has_taken_medication" id="has_taken_medication" class="form-control px-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
+                                <select class="<?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?>" name="has_taken_medication" id="has_taken_medication" class="form-control px-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="1" {{ $event->has_taken_medication == 1 ? 'selected' : '' }}>Yes</option>
                                     <option value="0" {{ $event->has_taken_medication == 0 ? 'selected' : '' }}>No</option>
                                 </select>
@@ -52,7 +52,7 @@
 
                             <div class="form-group">
                                 <label for="date">Date:</label>
-                                <input type="date" name="date" id="date" class="form-control" value="{{ old('date') ?? $event->date }}">
+                                <input type="date" name="date" id="date" class="form-control" value="{{ old('date') ?? $event->date }}" readonly>
                             </div>
 
                             <div class="form-group">
