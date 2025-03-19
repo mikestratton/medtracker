@@ -37,7 +37,7 @@
 
             @php $i = 1; @endphp
                     @foreach($events as $event)
-                        <form action="{{ route('events.update', $event->id) }}" method="POST">
+                        <form class="space-y-6 p-4 rounded shadow-md bg-white" action="{{ route('events.update', $event->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
 
@@ -62,7 +62,8 @@
 
                             <div class="form-group">
                                 <label for="note">Note:</label><br>
-                                <textarea name="note" id="note" class="form-control bg-amber-200">{{ old('note', $event->note) }}</textarea>
+                                <textarea name="note" id="note" class="form-control block w-full rounded-md border-gray-300 shadow-sm
+                         focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 resize-none bg-amber-200">{{ old('note', $event->note) }}</textarea>
                             </div>
 
                             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
