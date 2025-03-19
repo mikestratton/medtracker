@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TimezoneService; // Import the service
 use App\Models\Event;
 use App\Http\Requests\StoreEventRequest;
 use App\Http\Requests\UpdateEventRequest;
 use App\Models\MedicationAdministration;
+use App\Http\Controllers\MedicationAdministrationController;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -13,23 +15,32 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+
+    protected $timezoneService;
+
+    public function __construct(TimezoneService $timezoneService)
+    {
+        $this->timezoneService = $timezoneService;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $user_id = (int) Auth::id();
-        $meds = MedicationAdministration::where('user_id', $user_id)->first(); // user_id is the foreign key column.
+        $meds = MedicationAdministration::where('user_id', $user_id)->first();
 
-        $today = Carbon::today()->toDateTimeString();
-        $tomorrow = Carbon::tomorrow()->toDateTimeString();
+        // Use user timezone functions
+        $today = $this->timezoneService->getTodayInUserTimezone();
+        $tomorrow = $this->timezoneService->getTomorrowInUserTimezone();
 
         $events = Event::where('user_id', $user_id)
             ->where('date', '>=', $today)
             ->where('date', '<', $tomorrow)
             ->get();
 
-        $rowExists = MedicationAdministration::where('user_id', $user_id)->first(); // user_id is the foreign key column.
+        $rowExists = MedicationAdministration::where('user_id', $user_id)->first();
 
         if ($rowExists) {
             $timesTaken = $rowExists->times_taken_daily;
@@ -37,7 +48,7 @@ class EventController extends Controller
             $timesTaken = 0;
         }
 
-        return view('events.index', compact( 'meds',  'timesTaken', 'events'));
+        return view('events.index', compact('meds', 'timesTaken', 'events'));
     }
 
     /**

@@ -44,7 +44,7 @@
                             <h2>Dose #@php echo $i; @endphp</h2>
                             <div class="form-group">
                                 <label for="has_taken_medication">Has Taken Medication:</label>
-                                <select name="has_taken_medication" id="has_taken_medication" class="form-control">
+                                <select name="has_taken_medication" id="has_taken_medication" class="form-control px-2 rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
                                     <option value="1" {{ $event->has_taken_medication == 1 ? 'selected' : '' }}>Yes</option>
                                     <option value="0" {{ $event->has_taken_medication == 0 ? 'selected' : '' }}>No</option>
                                 </select>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\TimezoneService; // Import the service
 use App\Models\MedicationAdministration;
 use App\Models\Event;
 use App\Http\Requests\StoreMedicationAdministrationRequest;
@@ -15,6 +16,14 @@ use Illuminate\Support\Facades\DB;
 
 class MedicationAdministrationController extends Controller
 {
+
+    protected $timezoneService;
+
+    public function __construct(TimezoneService $timezoneService)
+    {
+        $this->timezoneService = $timezoneService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -103,31 +112,24 @@ class MedicationAdministrationController extends Controller
     {
         $user_id = Auth::id();
         $record = MedicationAdministration::where('user_id', $user_id)->first();
-//        dd($record->id);
         if ($record) {
             $timesTakenDaily = $record->times_taken_daily;
             $medicationAdministrationId = $record->id;
 
-            $userToday = $this->getTodayInUserTimezone();
-            $userTomorrow = $this->getTomorrowInUserTimezone();
-            $today = Carbon::today()->toDateTimeString();
-            $tomorrow = Carbon::tomorrow()->toDateTimeString();
+            $userToday = $this->timezoneService->getTodayInUserTimezone();
+            $userTomorrow = $this->timezoneService->getTomorrowInUserTimezone();
+
 
             // Check if rows already exist for today
             $existingCount = Event::where('medication_administration_id', $medicationAdministrationId)
                 ->where('date', '>=', $userToday)
                 ->where('date', '<', $userTomorrow)
-//                ->where('date', '>=', $today)
-//                ->where('date', '<', $tomorrow)
                 ->count();
 
 
-//            dd($existingCount);
             if ($existingCount < $timesTakenDaily) {
                 // Calculate how many more rows to create
                 $rowsToCreate = $timesTakenDaily - $existingCount;
-
-                $currentDate = Carbon::today();
                 $currentTime = Carbon::now();
                 $formattedTime = $currentTime->toTimeString();
 
@@ -135,7 +137,7 @@ class MedicationAdministrationController extends Controller
                     Event::create([
                         'user_id' => $user_id,
                         'medication_administration_id' => $medicationAdministrationId,
-                        'date' => $currentDate,
+                        'date' => $userToday,
                         'time' => $formattedTime,
                     ]);
                 }
@@ -150,35 +152,7 @@ class MedicationAdministrationController extends Controller
 
     }
 
-    public function getTodayInUserTimezone()
-    {
-        $user = Auth::user();
 
-        if ($user && $user->timezone) {
-            $userTimezone = $user->timezone;
-            $utcNow = Carbon::now('UTC');
-            $userNow = $utcNow->setTimezone($userTimezone);
-            $todayInUserTimezone = $userNow->toDateTimeString();
 
-            return $todayInUserTimezone;
-        } else {
-            return Carbon::today()->toDateTimeString();
-        }
-    }
 
-    public function getTomorrowInUserTimezone()
-    {
-        $user = Auth::user();
-
-        if ($user && $user->timezone) {
-            $userTimezone = $user->timezone;
-            $utcNow = Carbon::now('UTC');
-            $userNow = $utcNow->setTimezone($userTimezone);
-            $tomorrowInUserTimezone = $userNow->addDay()->toDateTimeString();
-
-            return $tomorrowInUserTimezone;
-        } else {
-            return Carbon::tomorrow()->toDateTimeString();
-        }
-    }
 }

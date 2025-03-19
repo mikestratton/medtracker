@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Http\Controllers\MedicationAdministrationController;
+use App\Services\TimezoneService;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -22,7 +23,7 @@ class CreateMedicationTimesListener
      */
     public function handle(Login $event): void
     {
-        $controller = new MedicationAdministrationController();
+        $controller = new MedicationAdministrationController(new TimezoneService());
         $controller->createMedicationTimes();
     }
 }
