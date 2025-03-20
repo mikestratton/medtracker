@@ -6,7 +6,7 @@
 
             @php $i = 1; @endphp
                     @foreach($events as $event)
-                        <p>Date: {{ $event->date }}, Time: {{ $event->time }}, <br>
+                        <p class="p-2 <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?> ">Date: {{ $event->date }}, Time: {{ $event->time }}, <br>
                             Medication Taken? {{ $event->has_taken_medication == 1 ? 'Yes' : 'No' }}
                             <br>
                             Note: {{ $event->note }}

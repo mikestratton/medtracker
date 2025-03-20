@@ -28,7 +28,7 @@ Route::resource('events', EventController::class)
     ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth'])  ;
 
-Route::patch('/events/{event}', [EventController::class, 'update'])->name('events.update')->middleware(['auth']);
+//Route::patch('/events/{event}', [EventController::class, 'update'])->name('events.update')->middleware(['auth']);
 
 Route::resource('medication_administration', MedicationAdministrationController::class)
     ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
