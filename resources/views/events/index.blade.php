@@ -1,20 +1,22 @@
 <x-layouts.app title="Medication Events">
-    <form action="{{ route('medication_administration.update', $meds->id) }}" method="POST">
-        @csrf
-        @method('PATCH')
+    @if($meds)
+        <form action="{{ route('medication_administration.update', $meds->id) }}" method="POST">
+            @csrf
+            @method('PATCH')
 
-        <h1 class="text-[22px]">
-            You take your meds
-            <input class="ml-4 w-12" type="number" name="times_taken_daily" value="{{ old('times_taken_daily', $timesTaken) }}">
-            <br>
-            times per day.
-        </h1>
+            <h1 class="text-[22px]">
+                You take your meds
+                <input class="ml-4 w-12" type="number" name="times_taken_daily" value="{{ old('times_taken_daily', $timesTaken) }}">
+                <br>
+                times per day.
+            </h1>
 
 
-        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Save
-        </button>
-    </form>
+            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Save
+            </button>
+        </form>
+    @endif
 
     <hr>
     <br>
@@ -37,7 +39,7 @@
 
             @php $i = 1; @endphp
                     @foreach($events as $event)
-                        <form class="space-y-6 p-4 rounded shadow-md <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?> action="{{ route('events.update', $event->id) }}" method="POST">
+                        <form class="space-y-6 p-4 rounded shadow-md <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?>" action="{{ route('events.update', $event->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
 
