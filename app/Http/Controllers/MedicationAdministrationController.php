@@ -191,7 +191,7 @@ class MedicationAdministrationController extends Controller
             $rowsToDelete = $existingCount - $timesTakenDaily;
 
             // Delete the oldest rows first
-            $eventsToDelete = $existingEvents->sortBy('created_at')->take($rowsToDelete);
+            $eventsToDelete = $existingEvents->sortByDesc('created_at')->take($rowsToDelete);
 
             foreach ($eventsToDelete as $event) {
                 $event->delete();
