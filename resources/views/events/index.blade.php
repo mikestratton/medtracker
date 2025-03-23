@@ -39,7 +39,7 @@
 
             @php $i = 1; @endphp
                     @foreach($events as $event)
-                        <form class="space-y-6 p-4 rounded shadow-md <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?>" action="{{ route('events.update', $event->id) }}" method="POST">
+                        <form class="space-y-6 p-4 rounded shadow-lg rounded-lg border border-gray-300 <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?>" action="{{ route('events.update', $event->id) }}" method="POST">
                             @csrf
                             @method('PATCH')
 
