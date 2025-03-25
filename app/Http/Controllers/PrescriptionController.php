@@ -70,9 +70,32 @@ class PrescriptionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePrescriptionRequest $request, Prescription $prescriptions)
+    public function update(Request $request, Prescription $prescription)
     {
-        //
+        if ($request->input('_action') === 'delete') {
+            $prescription->delete();
+            return redirect()->route('prescriptions.index')->with('success', 'Prescription deleted successfully!');
+        }
+
+        $user_id = Auth::id();
+
+        if ($prescription->user_id !== $user_id) {
+            abort(403);
+        }
+
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'dosage' => 'required|string',
+            'per_day' => 'required|integer|max:11',
+            'prescriber' => 'string',
+            'time_of_day' => 'string',
+        ]);
+
+        $validatedData['user_id'] = $user_id;
+
+        $prescription->update($validatedData);
+
+        return redirect()->route('prescriptions.index')->with('success', 'Prescription updated successfully!');
     }
 
     /**
