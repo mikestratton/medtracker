@@ -13,7 +13,7 @@
 
 
             <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                Save
+                Update
             </button>
         </form>
     @endif
@@ -31,7 +31,7 @@
                         <label for="times_taken_daily" class="form-label">How many times a day do you take your medications?</label>
                         <input type="number" name="times_taken_daily" id="times_taken_daily" value="{{ old('times_taken_daily') }}">
                     </div>
-                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
                 </form>
             @else
 {{--                    @for($i=1; $i<=$timesTaken; $i++)--}}
@@ -68,7 +68,7 @@
                          focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-3 resize-none bg-amber-200">{{ old('note', $event->note) }}</textarea>
                             </div>
 
-                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Save</button>
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
                         </form>
                         @php $i++ @endphp
                     @endforeach
