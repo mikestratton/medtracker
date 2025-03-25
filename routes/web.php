@@ -3,6 +3,7 @@
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MedicationAdministrationController;
+use App\Http\Controllers\PrescriptionController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -35,5 +36,9 @@ Route::resource('medication_administration', MedicationAdministrationController:
     ->middleware(['auth']);
 
 Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+
+Route::resource('prescriptions', PrescriptionController::class)
+    ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
 
 require __DIR__.'/auth.php';
