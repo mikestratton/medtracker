@@ -3,6 +3,7 @@
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MedicationAdministrationController;
+use App\Http\Controllers\PrescriberController;
 use App\Http\Controllers\PrescriptionController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
@@ -41,6 +42,10 @@ Route::put('/history/{id}', [HistoryController::class, 'update'])->name('history
 
 
 Route::resource('prescriptions', PrescriptionController::class)
+    ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
+    ->middleware(['auth']);
+
+Route::resource('prescribers', PrescriberController::class)
     ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
