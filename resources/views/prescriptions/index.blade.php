@@ -44,10 +44,17 @@
                         </div>
 
                         <div class="mb-4">
-                            <label for="prescriber" class="block text-sm font-medium text-gray-700">Prescriber</label>
-                            <input type="text" name="prescriber" id="prescriber" class="mt-1 p-2 border rounded-md w-full"
-                                   value="{{ old('prescriber') ?? (isset($prescription) ? $prescription->prescriber : '') }}">
-                            @error('prescriber') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+                            <label for="prescriber_id" class="block text-sm font-medium text-gray-700">Prescriber</label>
+                            <select name="prescriber_id" id="prescriber_id" class="mt-1 p-2 border rounded-md w-full">
+                                <option value="">Select a Prescriber</option>
+                                @foreach($prescribers as $prescriber)
+                                    <option value="{{ $prescriber->id }}"
+                                        {{ old('prescriber_id') == $prescriber->id || (isset($prescription) && $prescription->prescriber_id == $prescriber->id) ? 'selected' : '' }}>
+                                        {{ $prescriber->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('prescriber_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
                         </div>
 
                         <div class="mb-4">

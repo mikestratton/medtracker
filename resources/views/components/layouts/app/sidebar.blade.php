@@ -17,6 +17,7 @@
                     <flux:navlist.item icon="document-check" :href="route('events.index')" :current="request()->routeIs('events')" wire:navigate>{{ __('Medication Events') }}</flux:navlist.item>
                     <flux:navlist.item icon="calendar" :href="route('history.index')" :current="request()->routeIs('history')" wire:navigate>{{ __('Medication History') }}</flux:navlist.item>
                     <flux:navlist.item icon="pencil-square" :href="route('prescriptions.index')" :current="request()->routeIs('prescriptions')" wire:navigate>{{ __('Prescriptions') }}</flux:navlist.item>
+                    <flux:navlist.item icon="briefcase" :href="route('prescribers.index')" :current="request()->routeIs('prescribers')" wire:navigate>{{ __('Prescribers') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
