@@ -92,6 +92,10 @@ class EventController extends Controller
             abort(403);
         }
 
+        if ($request->form_id === 'history_form') {
+            $event->update($request->all());
+            return redirect()->route('history.index');
+        }
         $event->update($request->all());
 
         return redirect()->route('events.index');

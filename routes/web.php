@@ -35,7 +35,10 @@ Route::resource('medication_administration', MedicationAdministrationController:
     ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
     ->middleware(['auth']);
 
-Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+Route::get('/history', [HistoryController::class, 'index'])->name('history.index')->middleware(['auth']);
+Route::put('/history/{id}', [HistoryController::class, 'update'])->name('history.update')->middleware(['auth']);
+//Route::put('/history/{id}', [HistoryController::class, 'update'])->middleware(['auth']);
+
 
 Route::resource('prescriptions', PrescriptionController::class)
     ->only(['index', 'create', 'store', 'edit', 'update', 'destroy'])
