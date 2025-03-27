@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Prescriber;
 use App\Models\Prescription;
 use App\Http\Requests\StorePrescriptionRequest;
 use App\Http\Requests\UpdatePrescriptionRequest;
@@ -19,7 +20,11 @@ class PrescriptionController extends Controller
         $user_id = (int) Auth::id();
         $prescriptions = Prescription::where('user_id', $user_id)->get();
 
-        return view('prescriptions.index', compact('prescriptions'));
+        $prescribers = Prescriber::where('user_id', $user_id)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('prescriptions.index', compact('prescriptions', 'prescribers'));
     }
 
     /**
@@ -27,7 +32,12 @@ class PrescriptionController extends Controller
      */
     public function create()
     {
-        return view('prescriptions.create');
+        $user_id = (int) Auth::id();
+        $prescribers = Prescriber::where('user_id', $user_id)
+            ->orderBy('name', 'asc')
+            ->get();
+
+        return view('prescriptions.create', compact('prescribers'));
     }
 
     /**
@@ -35,12 +45,13 @@ class PrescriptionController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+//        dd($request->all());
         $user_id = Auth::id();
         $validatedData = $request->validate([
             'name' => 'required|string',
             'dosage' => 'required|string',
             'per_day' => 'required|integer|max:11',
-            'prescriber' => 'string',
+            'prescriber_id' => 'required|exists:prescribers,id',
             'time_of_day' => 'string'
         ]);
 
@@ -87,8 +98,8 @@ class PrescriptionController extends Controller
             'name' => 'required|string',
             'dosage' => 'required|string',
             'per_day' => 'required|integer|max:11',
-            'prescriber' => 'string',
-            'time_of_day' => 'string',
+            'prescriber_id' => 'required|exists:prescribers,id',
+            'time_of_day' => 'string'
         ]);
 
         $validatedData['user_id'] = $user_id;
