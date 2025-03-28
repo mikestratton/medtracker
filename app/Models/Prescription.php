@@ -25,4 +25,9 @@ class Prescription extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function prescriber(): BelongsTo
+    {
+        return $this->belongsTo(Prescriber::class);
+    }
 }

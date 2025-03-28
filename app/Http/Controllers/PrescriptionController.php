@@ -18,7 +18,9 @@ class PrescriptionController extends Controller
     public function index()
     {
         $user_id = (int) Auth::id();
-        $prescriptions = Prescription::where('user_id', $user_id)->get();
+        $prescriptions = Prescription::where('user_id', $user_id)
+            ->orderBy('name', 'asc')
+            ->get();
 
         $prescribers = Prescriber::where('user_id', $user_id)
             ->orderBy('name', 'asc')
@@ -83,15 +85,15 @@ class PrescriptionController extends Controller
      */
     public function update(Request $request, Prescription $prescription)
     {
-        if ($request->input('_action') === 'delete') {
-            $prescription->delete();
-            return redirect()->route('prescriptions.index')->with('success', 'Prescription deleted successfully!');
-        }
-
         $user_id = Auth::id();
 
         if ($prescription->user_id !== $user_id) {
             abort(403);
+        }
+
+        if ($request->input('_action') === 'delete') {
+            $prescription->delete();
+            return redirect()->route('prescriptions.index')->with('success', 'Prescription deleted successfully!');
         }
 
         $validatedData = $request->validate([

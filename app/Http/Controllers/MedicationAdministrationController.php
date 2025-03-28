@@ -92,9 +92,6 @@ class MedicationAdministrationController extends Controller
         $validatedData = $request->validate([
             'times_taken_daily' => 'required|integer|max:11',
         ]);
-//        $medicationAdministration->update($validatedData);
-
-        $originalTimesTakenDaily = $medicationAdministration->times_taken_daily;
 
         $medicationAdministration->update($validatedData);
 

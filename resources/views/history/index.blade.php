@@ -1,7 +1,7 @@
 <x-layouts.app title="Medication History">
 
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
+        <div class="grid auto-rows-min gap-4 md:grid-cols-6">
 
             @foreach($events as $event)
                 <form class="space-y-6 p-4 rounded shadow-lg rounded-lg border border-gray-300 <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?>" action="{{ route('events.update', $event->id) }}" method="POST">

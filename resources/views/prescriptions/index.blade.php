@@ -2,14 +2,14 @@
     <h1 class="text-[24px]">Prescriptions</h1>
     <form action="/prescriptions/create" method="get">
     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-    Add Prescription
+    Add a Prescription
 {{--        <a href="/prescriptions/create">Add Prescription</a>--}}
     </button>
     </form>
     <hr>
     <br>
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-4">
+        <div class="grid auto-rows-min gap-4 md:grid-cols-6">
 
         @php $x=1; @endphp
         @if($prescriptions)
