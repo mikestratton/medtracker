@@ -71,16 +71,15 @@ class PrescriberController extends Controller
      */
     public function update(Request $request, Prescriber $prescriber)
     {
-//        dd($request->all());
-        if ($request->input('_action') === 'delete') {
-            $prescriber->delete();
-            return redirect()->route('prescribers.index')->with('success', 'Prescriber deleted successfully!');
-        }
-
         $user_id = Auth::id();
 
         if ($prescriber->user_id !== $user_id) {
             abort(403);
+        }
+
+        if ($request->input('_action') === 'delete') {
+            $prescriber->delete();
+            return redirect()->route('prescribers.index')->with('success', 'Prescriber deleted successfully!');
         }
 
         $validatedData = $request->validate([
