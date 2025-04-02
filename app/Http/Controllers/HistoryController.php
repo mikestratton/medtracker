@@ -13,7 +13,7 @@ class HistoryController extends Controller
         $user_id = (int) Auth::id();
         $events = Event::where('user_id', $user_id)
             ->orderBy('date', 'desc')
-            ->get();
+            ->paginate(30);
 
         return view('history.index', compact('events'));
     }

@@ -2,8 +2,8 @@
 
     <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
         <div class="grid auto-rows-min gap-4 md:grid-cols-6">
-
-            @foreach($events as $event)
+            @if($events->count() > 0)
+                @foreach($events as $event)
                 <form class="space-y-6 p-4 rounded shadow-lg rounded-lg border border-gray-300 <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?>" action="{{ route('events.update', $event->id) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -37,40 +37,13 @@
 
                     <button type="submit" name="_action" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update</button>
                 </form>
-
-{{--                <p class="p-2 <?php echo ($event->has_taken_medication == 1) ? 'bg-green-400/20' : 'bg-red-400/20'; ?> ">Date: {{ $event->date }}, Time: {{ $event->time }}, <br>--}}
-{{--                    Medication Taken? {{ $event->has_taken_medication == 1 ? 'Yes' : 'No' }}--}}
-{{--                    <br>--}}
-{{--                    Note: {{ $event->note }}--}}
-{{--                </p>--}}
             @endforeach
-{{--                    @endfor--}}
-
-
-
-{{--            @foreach($events as $event)--}}
-{{--                <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">--}}
-{{--                    <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />--}}
-
-{{--                <p class="mx-10 my-4">Date: {{ $event->date }}<br>--}}
-{{--                    Time: {{ \Carbon\Carbon::parse($event->time)->format('g:i A') }} <br>--}}
-{{--                    Note: {{ $event->note }} <br>--}}
-{{--                    Taken: {{ $event->has_taken_medication == 0 ? 'False' : 'True' }}--}}
-{{--                </p>--}}
-{{--                </div>--}}
-{{--            @endforeach--}}
-
-            {{--<div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>--}}
-{{--        </div>--}}
-{{--        <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />--}}
-
-
+                    <div class="mt-4">
+                        {{ $events->links() }}
+                    </div>
+            @else
+                <p>No events found.</p>
+            @endif
         </div>
     </div>
 </x-layouts.app>
